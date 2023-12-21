@@ -7,7 +7,22 @@
 3. Write the values in the `.env` that you need, read the comments
 4. Install dependencies `npm install`
 
-## Scripts
+## Explanation of NPM Scripts
+
+1. **start**: `node server.js`
+   - Runs the server using Node.js. This is typically used in production environments.
+
+2. **dev**: `node --watch server.js`
+   - Runs the server with the Node.js `--watch` flag, which automatically restarts the server when file changes are detected. Similar to Nodemon, but it's a newer feature in Node.js itself.
+
+3. **dev-nodemon**: `nodemon server.js`
+   - Runs the server using Nodemon, a utility that monitors for any changes in your source and automatically restarts your server.
+
+4. **seed**: `node models/seed.js`
+   - Executes the `seed.js` script to populate the MongoDB database with initial data, often used for setting up a development environment with test data.
+
+These scripts provide convenient ways to start the server and manage the development workflow, especially the live-reloading features for development.
+
 
 
 

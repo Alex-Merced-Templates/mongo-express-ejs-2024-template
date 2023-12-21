@@ -12,7 +12,7 @@ const connectMongo = require("connect-mongo"); // middleware for storing session
 const sampleRouter = require("./controllers/sample");
 
 // get PORT, DATABASE_URL and SECRET variables from .env
-const { PORT, DATABASE_URL, SECRET } = process.env;
+const { PORT = 3000, DATABASE_URL, SECRET = "default" } = process.env;
 
 // Create Express App Object
 const app = express();
@@ -23,12 +23,14 @@ app.use(express.static("public")); // static folder for serving static assets
 app.use(methodOverride("_method")); // override method with _method url query
 app.use(express.urlencoded({ extended: true })); // parse urlencoded bodies
 app.use(express.json()); // parse JSON bodies
-app.use(session({
+app.use(
+  session({
     secret: SECRET,
     resave: true,
     saveUninitialized: true,
     store: connectMongo.create({ mongoUrl: DATABASE_URL }),
-  })); // enable session cookies (store data in req.session between requests)
+  })
+); // enable session cookies (store data in req.session between requests)
 
 // Register Routes
 app.use("/samples", sampleRouter);

@@ -45,3 +45,69 @@ These scripts provide convenient ways to start the server and manage the develop
 8. **mongoose (v8.0.3)**: An ODM (Object Data Modeling) library for MongoDB and Node.js. It manages relationships between data and provides schema validation.
 
 9. **morgan (v1.10.0)**: An HTTP request logger middleware for Node.js, useful for logging request details for debugging and monitoring.
+
+## Explaining Server.js
+
+```js
+
+// load .env vars
+require("dotenv").config;
+
+// import dependencies
+const express = require("express"); //framework
+const morgan = require("morgan"); // logger
+const methodOverride = require("method-override"); // override form posts
+const session = require("express-session"); // middleware for managing session cookies
+const connectMongo = require("connect-mongo"); // middleware for storing sessions in mongo
+
+// Import Routers
+const sampleRouter = require("./controllers/sample");
+
+// get PORT, DATABASE_URL and SECRET variables from .env
+const { PORT = 3000, DATABASE_URL, SECRET = "default" } = process.env;
+
+// Create Express App Object
+const app = express();
+
+// Register Middleware
+app.use(morgan("dev")); // logger
+app.use(express.static("public")); // static folder for serving static assets
+app.use(methodOverride("_method")); // override method with _method url query
+app.use(express.urlencoded({ extended: true })); // parse urlencoded bodies
+app.use(express.json()); // parse JSON bodies
+app.use(
+  session({
+    secret: SECRET,
+    resave: true,
+    saveUninitialized: true,
+    store: connectMongo.create({ mongoUrl: DATABASE_URL }),
+  })
+); // enable session cookies (store data in req.session between requests)
+
+// Register Routes
+app.use("/samples", sampleRouter);
+
+// main route for "/" (all other routes should be handled by routers)
+app.get("/", (req, res) => {
+  res.send("Server is Working");
+});
+
+// turn on server
+app.listen(PORT, () => {
+  console.log(`Server listening on PORT ${PORT}`);
+});
+
+
+```
+
+The provided code is a basic setup for a Node.js application using Express.js. It starts by loading environment variables and importing necessary dependencies such as Express (web framework), Morgan (logging middleware), Method-Override (to use HTTP verbs like PUT/DELETE in forms), and session management tools (express-session and connectMongo for storing sessions in MongoDB).
+
+A custom router sampleRouter is imported for handling routes under "/samples". The application uses middleware for logging, serving static files, overriding methods, parsing request bodies, and managing session cookies. Session cookies are stored in MongoDB, configured with the DATABASE_URL from the environment variables. The secret key for sessions is also sourced from environment variables.
+
+The application defines a main route ("/") that responds with "Server is Working" when accessed. Finally, the application listens on the specified PORT, displaying a console message when it starts.
+
+Expected Output:
+```
+Server listening on PORT [port_number]
+```
+Here, [port_number] will be replaced with the actual port number specified in the .env file.

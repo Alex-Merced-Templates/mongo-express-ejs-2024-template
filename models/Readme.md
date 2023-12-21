@@ -56,6 +56,35 @@ This snippet illustrates the creation of a Mongoose model in a Node.js applicati
 
 ## seed.js
 
+```js
+// SEED FILE - FOR ONE OFF DATABASE OPERATIONS
+// RUN THIS FILE WITH "npm run seed"
+
+// Import Connection
+const mongoose = require("./connection.js");
+
+// Import Models
+const Sample = require("./Sample.js");
+
+// Delay Seed Code Till Connection Opens with Connection Event
+mongoose.connection.on("open", async () => {
+  // seed code should be inside this function
+
+  // clear the collection
+  await Sample.deleteMany({});
+
+  // add seed data
+  const samples = await Sample.create([
+    { prop1: "a", prop2: "b" },
+    { prop1: "c", prop2: "d" },
+    { prop1: "e", prop2: "f" },
+  ]);
+
+  // log to confirm it was created
+  console.log(samples);
+});
+```
+
 This code snippet represents a seed file for database operations in a Node.js application using Mongoose. It is typically run as a one-off operation to initialize or reset the database with predefined data. The process begins by importing the Mongoose connection and the required model (`Sample`). Inside an asynchronous function triggered by the 'open' event of the Mongoose connection, the seed file performs two main operations: 
 
 1. **Clearing the Collection**: The `Sample.deleteMany({})` command clears out the existing data in the `Sample` collection.

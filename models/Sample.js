@@ -3,8 +3,6 @@
 // Import Connection
 const mongoose = require("./connection");
 
-console.log(mongoose)
-
 // Create a Schema
 const sampleSchema = new mongoose.Schema(
   {

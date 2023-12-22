@@ -37,7 +37,7 @@ app.use("/samples", sampleRouter);
 
 // main route for "/" (all other routes should be handled by routers)
 app.get("/", (req, res) => {
-  res.send("Server is Working");
+  res.render("index.ejs");
 });
 
 // turn on server
